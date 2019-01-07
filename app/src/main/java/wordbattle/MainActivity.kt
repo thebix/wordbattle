@@ -1,7 +1,8 @@
-package com.babbel.wordbattle
+package wordbattle
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.babbel.wordbattle.R
 
 class MainActivity : AppCompatActivity() {
 
