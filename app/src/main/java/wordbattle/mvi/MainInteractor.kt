@@ -45,7 +45,8 @@ class MainInteractor @Inject constructor(
                 .switchMap {
                     fetchWordsUseCase.execute()
                         .subscribeOn(ioScheduler)
-                        .toObservable<MainResult>()
+                        .toSingleDefault(MainResult.FetchFinish as MainResult)
+                        .toObservable()
                         .doOnError { error ->
                             if (error is IOException) {
                                 Timber.d(error)
@@ -54,7 +55,6 @@ class MainInteractor @Inject constructor(
                             }
                         }
                         .onErrorReturnItem(MainResult.Error)
-                        .map { MainResult.FetchFinish as MainResult }
                         .startWith(MainResult.FetchStart)
                 }
         }
@@ -91,7 +91,7 @@ class MainInteractor @Inject constructor(
         ObservableTransformer { actions ->
             actions
                 .switchMap {
-                    buzzUseCase.execute(it.player, it.word, it.playerTranslation, it.tryCount)
+                    buzzUseCase.execute(it.word, it.playerTranslation)
                         .map { isRight ->
                             MainResult.PlayerChange(
                                 it.player,

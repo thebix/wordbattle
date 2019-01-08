@@ -41,18 +41,22 @@ class MainViewModel(
                     isLoading = false
                 )
                 MainResult.Error -> prevState.copy(
-                    fatalError = OneShot(Any())
+                    fatalError = OneShot(true)
                 )
                 is MainResult.PlayerChange -> {
                     val score: MutableMap<Player, Int> = prevState.score.toMutableMap()
-                    if (result.state == PlayerState.RightAnswer) {
-                        score[result.player] = (score[result.player] ?: 0) + 1
-                    } else {
-                        score[result.player] = (score[result.player] ?: 0) - 1
-                    }
-                    // TODO: message to player
+                    val message =
+                        if (result.state == PlayerState.RightAnswer) {
+                            score[result.player] = (score[result.player] ?: 0) + 1
+                            // TODO: should be enum with mapping to proper text in view class OR should be part of BE response
+                            "Right"
+                        } else {
+                            score[result.player] = (score[result.player] ?: 0) - 1
+                            "Wrong"
+                        }
                     prevState.copy(
-                        score = score
+                        score = score,
+                        message = OneShot(message)
                     )
                 }
                 is MainResult.NextWord -> prevState.copy(

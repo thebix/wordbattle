@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">WordBattle</string>
+    <string name="main_fatal_error">Something went wrong</string>
+    <string name="main_start">Start</string>
+    <string name="main_buzz">Buzz</string>
 </resources>

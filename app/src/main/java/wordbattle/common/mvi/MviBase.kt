@@ -4,7 +4,6 @@ package wordbattle.common.mvi
 import android.arch.lifecycle.ViewModel
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.subjects.PublishSubject
@@ -66,7 +65,6 @@ abstract class MviViewModel<Intention : MviIntention, Action : MviAction, Result
             .compose(interactor.actionProcessor())
             .scan(defaultState, reducer)
             .distinctUntilChanged()
-            .observeOn(AndroidSchedulers.mainThread())
             .replay(1)
             .autoConnect(0)
     }

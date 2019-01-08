@@ -72,9 +72,7 @@ data class MainState(
         Pair(Player.One, 0), Pair(Player.Two, 0)
     ),
     val tryCount: Int = 0,
-    val message: Map<Player, OneShot<String>> = mapOf(
-        Pair(Player.One, OneShot.empty()), Pair(Player.Two, OneShot.empty())
-    ),
-    val fatalError: OneShot<Any> = OneShot.empty()
+    val message: OneShot<String> = OneShot.empty(),
+    val fatalError: OneShot<Boolean> = OneShot.empty()
 
 ) : MviState, ViewStateWithId()

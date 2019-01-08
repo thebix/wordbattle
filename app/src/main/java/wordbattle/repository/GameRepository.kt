@@ -4,8 +4,10 @@ import com.google.gson.annotations.SerializedName
 import io.reactivex.Completable
 import io.reactivex.Single
 import wordbattle.api.WordApi
+import wordbattle.di.MainActivityScope
 import javax.inject.Inject
 
+@MainActivityScope
 class GameRepository @Inject constructor(
     private val wordApi: WordApi
 ) {
