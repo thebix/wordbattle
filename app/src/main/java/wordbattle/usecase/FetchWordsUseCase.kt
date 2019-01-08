@@ -1,12 +1,13 @@
 package wordbattle.usecase
 
 import io.reactivex.Completable
+import wordbattle.repository.GameRepository
 import javax.inject.Inject
 
-class FetchWordsUseCase @Inject constructor() {
+class FetchWordsUseCase @Inject constructor(
+    private val gameRepository: GameRepository
+) {
 
-    fun execute(): Completable {
-        // TODO: implement
-        return Completable.error(NotImplementedError())
-    }
+    fun execute(): Completable =
+        gameRepository.fetchWords()
 }
