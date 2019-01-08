@@ -57,7 +57,7 @@ sealed class MainResult : MviResult {
 }
 
 enum class Player {
-    One, Two
+    One, Two, Three, Four
 }
 
 enum class PlayerState {
@@ -69,7 +69,7 @@ data class MainState(
     val translation: OneShot<String> = OneShot.empty(),
     val isLoading: Boolean = false,
     val score: Map<Player, Int> = mapOf(
-        Pair(Player.One, 0), Pair(Player.Two, 0)
+        Pair(Player.One, 0), Pair(Player.Two, 0), Pair(Player.Three, 0), Pair(Player.Four, 0)
     ),
     val tryCount: Int = 0,
     val message: OneShot<String> = OneShot.empty(),

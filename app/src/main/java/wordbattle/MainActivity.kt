@@ -6,6 +6,7 @@ import android.support.annotation.UiThread
 import android.support.v7.app.AppCompatActivity
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.view.animation.AnimationSet
 import android.view.animation.AnimationUtils
@@ -41,6 +42,8 @@ class MainActivity : AppCompatActivity() {
     private var currentTryCount: Int = 0
     private lateinit var buzz1: TextView
     private lateinit var buzz2: TextView
+    private lateinit var buzz3: TextView
+    private lateinit var buzz4: TextView
     private lateinit var word1: TextView
     private lateinit var word2: TextView
     private lateinit var translation1: TextView
@@ -54,6 +57,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.main_activity)
         buzz1 = findViewById(R.id.main_player1)
         buzz2 = findViewById(R.id.main_player2)
+        buzz3 = findViewById(R.id.main_player3)
+        buzz4 = findViewById(R.id.main_player4)
         word1 = findViewById(R.id.main_word1)
         word2 = findViewById(R.id.main_word2)
         translation1 = findViewById(R.id.main_translation1)
@@ -81,6 +86,9 @@ class MainActivity : AppCompatActivity() {
         super.onStop()
     }
 
+    /**
+     * This is a single point for getting state of View
+     */
     @UiThread
     private fun render(state: MainState) {
         Timber.d("State: $state")
@@ -120,18 +128,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun intentions() = Observable.merge(
-        Observable.fromCallable { MainIntention.Init },
-        intentionSubject,
-        RxView.clicks(buzz1)
-            .filter { isBuzzed.not() }
-            .map {
-                buzzIntention(Player.One)
-            },
-        RxView.clicks(buzz2)
-            .filter { isBuzzed.not() }
-            .map {
-                buzzIntention(Player.Two)
-            }
+        listOf(
+            Observable.fromCallable { MainIntention.Init },
+            intentionSubject,
+            RxView.clicks(buzz1)
+                .filter { isBuzzed.not() }
+                .map {
+                    buzzIntention(Player.One)
+                },
+            RxView.clicks(buzz2)
+                .filter { isBuzzed.not() }
+                .map {
+                    buzzIntention(Player.Two)
+                },
+            RxView.clicks(buzz3)
+                .filter { isBuzzed.not() }
+                .map {
+                    buzzIntention(Player.Three)
+                },
+            RxView.clicks(buzz4)
+                .filter { isBuzzed.not() }
+                .map {
+                    buzzIntention(Player.Four)
+                }
+        )
     )
 
     private fun buzzIntention(player: Player) = if (isGameRunning) {
@@ -148,6 +168,8 @@ class MainActivity : AppCompatActivity() {
         isGameRunning = true
         buzz1.text = getString(R.string.main_buzz)
         buzz2.text = getString(R.string.main_buzz)
+        buzz3.text = getString(R.string.main_buzz)
+        buzz4.text = getString(R.string.main_buzz)
         MainIntention.NextWord()
     }
 
@@ -158,9 +180,11 @@ class MainActivity : AppCompatActivity() {
         translation2.text = translation
         val move1 = AnimationUtils.loadAnimation(applicationContext, R.anim.move1)
         val move2 = AnimationUtils.loadAnimation(applicationContext, R.anim.move2)
-        val fadeIn = AnimationUtils.loadAnimation(applicationContext, R.anim.fade_in)
-        val fadeOut = AnimationUtils.loadAnimation(applicationContext, R.anim.fade_out)
+        val fadeIn = AlphaAnimation(0f, 1f)
+        val fadeOut = AlphaAnimation(1f, 0f)
         // TODO: move to companion object const
+        fadeIn.duration = 500
+        fadeOut.duration = 500
         val randomDuration = Random.nextLong(1000, 3000)
         move1.duration = randomDuration
         move2.duration = randomDuration
