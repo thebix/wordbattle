@@ -3,19 +3,24 @@ package wordbattle.repository
 import com.google.gson.annotations.SerializedName
 import io.reactivex.Completable
 import io.reactivex.Single
+import wordbattle.api.WordApi
 import javax.inject.Inject
 
-class GameRepository @Inject constructor() {
+class GameRepository @Inject constructor(
+    private val wordApi: WordApi
+) {
 
-    fun words(): Single<List<Word>> {
-        // TODO: implement
-        return Single.error(NotImplementedError())
-    }
+    private var items: List<Word> = listOf()
 
-    fun fetchWords(): Completable {
-        // TODO: load words from remote to repo
-        return Completable.error(NotImplementedError())
-    }
+    fun words(): Single<List<Word>> =
+        Single.fromCallable { items }
+
+    fun fetchWords(): Completable =
+        wordApi.words()
+            .doOnSuccess { words ->
+                items = words
+            }
+            .ignoreElement()
 }
 
 data class Word(
