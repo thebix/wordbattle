@@ -21,6 +21,11 @@ class MainInteractor @Inject constructor(
     @IoScheduler private val ioScheduler: Scheduler
 ) : MviInteractor<MainAction, MainResult> {
 
+    /**
+     * to do the splitting, there is a publish method, we pass a function to it with observable as the parameter.
+     * inside this publisher method we can do anything we want with the observable as long as at the end we just
+     * return one observable
+     */
     override fun actionProcessor(): ObservableTransformer<in MainAction, out MainResult> {
         return ObservableTransformer { actions ->
             actions

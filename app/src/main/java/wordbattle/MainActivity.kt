@@ -24,6 +24,26 @@ import wordbattle.mvi.*
 import javax.inject.Inject
 import kotlin.random.Random
 
+/**
+ * Intentions, Actions, Result and State are declared in MainIARS.kt
+ *
+ * MainActivity sends user Intention (ex, button tap) to the viewModel.processIntentions() method (in ViewModel's base class ).
+ * viewModel.processIntentions() sends Intention to the compose() method of base class.
+ * compose() method connects all logic of data flow.
+ *
+ * compose() method filters initial intention, since this intention should pass the stream only once.
+ * Then compose() method do mapping from Intention to Action in actionFromIntention() method of MainViewModel class.
+ * This action is sent to the interactor.actionProcessor() method of MainInteractor class. MainInteractor class is the class where
+ * all side effects are happened for MainActivity.
+ *
+ * After applying business logic in Interactor it results with MainResult. This result is sent back to MainViewModel's reducer.
+ *
+ * Reducer creates new view state based on previous state and incoming result and sends this state to the MainActivity.
+ *
+ * View (MainActivity) has two points of data interaction:  intentions() - outgoing, render() - incoming
+ * ViewModel (MainViewModel) has two points of data interaction: actionFromIntention() - outgoing, reducer - incoming
+ */
+
 class MainActivity : AppCompatActivity() {
 
     private val intentionSubject = PublishSubject.create<MainIntention>()

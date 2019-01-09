@@ -7,6 +7,11 @@ import wordbattle.api.WordApi
 import wordbattle.di.MainActivityScope
 import javax.inject.Inject
 
+/**
+ * We don't need Interface for this Repository (and UseCases as well) since there is only one
+ * implementation of this classes in this project and mockito_inline is okay with final classes
+ */
+
 @MainActivityScope
 class GameRepository @Inject constructor(
     private val wordApi: WordApi
